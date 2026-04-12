@@ -1,0 +1,14 @@
+# ---- User-specific / secrets ----
+.env
+
+# ---- Copyrighted lecture materials ----
+WorkingDir/LectureSlides/
+
+# ---- Legacy root-level .claude config (inert) ----
+/.claude/
+
+# ---- OS / editor junk ----
+.DS_Store
+Thumbs.db
+*.swp
+*~
