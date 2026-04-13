@@ -1,0 +1,64 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper, tmargin=0.75in, lmargin=0.80in, rmargin=1.2in, bmargin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=blue,
+    citecolor=black,
+}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
+
+% Compact section spacing
+\titlespacing*{\section}{0pt}{1.5ex plus 0.5ex}{0.8ex plus 0.2ex}
+\titlespacing*{\subsection}{0pt}{1.2ex plus 0.4ex}{0.5ex plus 0.1ex}
+\titlespacing*{\subsubsection}{0pt}{1.0ex plus 0.3ex}{0.3ex plus 0.1ex}
+
+% Wider right margin for reader annotations
+% (set in geometry above: rmargin=1.2in)
+
+% Header/footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small $title$}
+\fancyhead[R]{\small HSDSD -- NTUST}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Pandoc compatibility
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Image defaults
+\setkeys{Gin}{width=0.85\linewidth,keepaspectratio}
+
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries $title$}
+\end{center}
+
+\vspace{2mm}
+\hrule
+\vspace{1mm}
+\hrule
+\vspace{5mm}
+
+$body$
+
+\end{document}

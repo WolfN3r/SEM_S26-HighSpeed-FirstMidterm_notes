@@ -1,394 +1,376 @@
+---
+title: HSDSD Midterm Study Notes
+subtitle: Chapters 1–5
+date: 2026-04-13
+---
+
 # HSDSD Midterm Study Notes
 
-**Audience:** Student with EM fields and intro radio-wave background.
-**Source:** NTUST HSDSD lecture slides, chap1–5.
-
 ---
 
-## Chapter 1 — Why Interconnect Design Matters
+# Chapter 1 — Why Interconnect Design Matters
 
-### The core problem
+## What is an Interconnect?
 
-At high data rates, PCB traces can no longer be treated as simple wires. A signal with rise time $t_r = 100\,\text{ps}$ has a highest frequency of interest:
+Any conductive path carrying a digital signal — PCB traces, chip packages, connectors, sockets — is called an **interconnect**. A group of interconnects sharing data forms a **bus**.
 
-$$f_2 = \frac{1}{\pi t_r} = \frac{0.32}{t_r}$$
-*(chap1.pdf, p.6)*
+For the system to work correctly, the interconnect must deliver:
+- **High voltage** above $V_{ih}$ (logic-high threshold)
+- **Low voltage** below $V_{il}$ (logic-low threshold)
 
-At 100 ps rise time, $f_2 \approx 3.2\,\text{GHz}$ — the corresponding wavelength in FR4 is only a few centimetres. Any trace longer than $\lambda/10$ must be treated as a **transmission line**, not a lumped wire.
+The region between $V_{il}$ and $V_{ih}$ is the **threshold region** — an undefined state. The narrower (shorter) the signal spends there, the more robust the system.
 
-### Transmission line criterion
+## When Does a Trace Become a Transmission Line?
 
-A conductor must be modelled as a TX line when its electrical length $\geq \lambda/10$:
+In 100 ps, light travels ~30 mm in free space. PCB traces can be that long or longer, so the speed of light matters.
 
-$$\lambda_l = \frac{\lambda}{10} \quad \Leftrightarrow \quad TD_l \geq \frac{t_r}{10}$$
+**Rule:** Any conductor $\geq \lambda/10$ (one-tenth of the wavelength at the highest significant frequency) must be treated as a transmission line.
+
+In terms of timing:
+
+$$T_D \geq \frac{t_r}{10} \implies \text{treat as TX line}$$
+
 *(chap1.pdf, p.7)*
 
-**Practical rule:** if trace delay $\geq t_r / 10$, use TX-line model.
+## Highest Frequency of Interest
 
-### Trapezoidal spectrum
+For a trapezoidal signal with rise time $\tau_r$ (10–90%):
 
-A clock waveform with rise time $t_r$, pulse width $\tau$, and period $T$ has a three-region spectral envelope:
-
-| Frequency range | Slope |
-|---|---|
-| $0$ to $f_1 = 1/(\pi\tau)$ | 0 dB/decade (flat) |
-| $f_1$ to $f_2 = 1/(\pi t_r)$ | −20 dB/decade |
-| above $f_2$ | −40 dB/decade |
+$$f_{\max} = \frac{0.32}{\tau_r}$$
 
 *(chap1.pdf, p.6)*
 
-Key takeaway: faster edges raise $f_2$, increase spectral content, and worsen every interconnect effect.
+Faster edges → higher $f_{\max}$ → shorter critical length → more interconnects behave as transmission lines.
+
+## The Bottleneck Problem
+
+Moore's Law predicts performance doubles every 18 months. As the processor core speeds up, the **bus** that feeds it must keep up. At high frequencies, effects like reflections, crosstalk, and conductor losses — collectively the subject of HSDSD — become the design challenge.
 
 ---
 
-## Chapter 2 — Transmission Line Fundamentals
+# Chapter 2 — Ideal Transmission Line Fundamentals
 
-### Characteristic impedance
+## Microstrip vs. Stripline
 
-For a general (lossy) line:
+| Property | Microstrip | Stripline |
+|---|---|---|
+| Layer | Outer (surface) | Inner |
+| Ground reference | One plane below | Planes above and below |
+| Effective $\varepsilon_r$ | Smaller (partial air) | Larger (fully embedded) |
+| Speed | Faster (smaller TD) | Slower (larger TD) |
+| Crosstalk velocity variation | Yes | No |
 
-$$Z_o = \sqrt{\frac{R + j\omega L}{G + j\omega C}}$$
-*(chap2.pdf, p.4)*
+## The RLCG Equivalent Circuit
 
-For a lossless line ($R=G=0$):
+A transmission line is modeled as a ladder of infinitesimal elements per unit length:
 
-$$Z_o = \sqrt{\frac{L}{C}}$$
-*(chap2.pdf, p.4)*
+- **R** (Ω/m): conductor resistance (finite conductivity)
+- **L** (H/m): magnetic-field energy storage
+- **C** (F/m): electric-field energy storage
+- **G** (S/m): dielectric leakage
 
-### Practical impedance formulas
+The mode of propagation is **TEM** (Transverse Electromagnetic) — no E or H field components in the direction of propagation.
 
-**Microstrip** (trace on outer layer, one ground plane):
+## Characteristic Impedance
 
-$$Z_o \approx \frac{87}{\sqrt{\varepsilon_r + 1.41}} \ln\!\left(\frac{5.98H}{0.8W + T}\right)$$
-*(chap2.pdf, p.7)*
+For a lossless line (R = G = 0, valid for most practical cases):
 
-**Symmetric stripline** (trace buried between two ground planes, equal spacing $H/2$ each side):
+$$Z_0 = \sqrt{\frac{L}{C}}$$
 
-$$Z_o \approx \frac{60}{\sqrt{\varepsilon_r}} \ln\!\left(\frac{4H}{0.67\pi(T + 0.8W)}\right)$$
-*(chap2.pdf, p.8)*
+*(chap2.pdf, p.9)*
 
-where $H$ = total dielectric height, $W$ = trace width, $T$ = trace thickness.
+**Microstrip empirical formula** (valid for $0.1 < W/H < 2$, $1 < \varepsilon_r < 15$):
 
-### Propagation velocity and delay
+$$Z_0 \approx \frac{87}{\sqrt{\varepsilon_r + 1.41}} \ln\!\left(\frac{5.98H}{0.8W + T}\right) \quad \Omega$$
 
-$$v = \frac{c}{\sqrt{\varepsilon_r}}, \qquad TD = \frac{x\sqrt{\varepsilon_r}}{c}$$
+*(chap2.pdf, p.9)*
+
+**Symmetric stripline empirical formula** (valid for $W/H < 0.35$, $T/H < 0.25$):
+
+$$Z_0 \approx \frac{60}{\sqrt{\varepsilon_r}} \ln\!\left(\frac{4H}{0.67\pi(T + 0.8W)}\right) \quad \Omega$$
+
 *(chap2.pdf, p.10)*
 
-For microstrip the field is partly in air, so an **effective dielectric constant** $\varepsilon_{eff} < \varepsilon_r$ applies — microstrip is faster than stripline for the same $\varepsilon_r$.
+## Propagation Velocity and Time Delay
 
-### SPICE modelling rule
+$$v = \frac{c}{\sqrt{\varepsilon_r}}, \quad \text{TD} = \frac{x\sqrt{\varepsilon_r}}{c} = \sqrt{LC}$$
 
-Segment the line so each segment's time delay $\leq t_r/10$:
+*(chap2.pdf, p.11)*
 
-$$\text{segments} \geq \frac{10x}{v t_r}$$
-*(chap2.pdf, p.13)*
+where $c = 3 \times 10^8$ m/s, $x$ = line length.
 
-### Reflections
+**Effective dielectric constant for microstrip** (partial air exposure):
 
-When a wave reaches an impedance discontinuity $Z_t$:
+$$\varepsilon_e = \frac{\varepsilon_r+1}{2} + \frac{\varepsilon_r-1}{2}\left(1+\frac{12H}{W}\right)^{-1/2} + F - 0.217(\varepsilon_r-1)\frac{T}{\sqrt{WH}}$$
 
-$$\rho = \frac{Z_t - Z_o}{Z_t + Z_o}, \qquad V_\text{reflected} = \rho\, V_\text{incident}$$
-*(chap2.pdf, p.18)*
+*(chap2.pdf, p.12)*
 
-The first wave launched onto the line (voltage divider at source):
+where $F = 0.02(\varepsilon_r-1)(1-W/H)^2$ for $W/H<1$, else $F=0$.
 
-$$V_i = V_s \frac{Z_o}{Z_o + Z_s}$$
+## SPICE Lumped Segment Model
+
+To simulate a TX line in SPICE, break it into $N$ lumped-LC segments:
+
+$$N \geq 10\left(\frac{x/v}{T_r}\right), \quad \text{TD}_{\text{seg}} = \sqrt{L_{\text{seg}}C_{\text{seg}}} \leq \frac{T_r}{10}$$
+
+*(chap2.pdf, p.14)*
+
+## Launching Waves and Reflections
+
+When the source drives the line at $t=0$, the initial voltage is set by a voltage divider between the source impedance $Z_s$ and the line impedance $Z_0$:
+
+$$V_i = V_s \frac{Z_0}{Z_0 + Z_s}$$
+
 *(chap2.pdf, p.17)*
 
-Use a **lattice diagram** to track successive reflections at each end of the line.
+At any **junction** (impedance change), a reflection is generated:
 
----
+$$\rho = \frac{Z_t - Z_0}{Z_t + Z_0}$$
 
-## Chapter 3 — Crosstalk
+*(chap2.pdf, p.18)*
 
-### Physical origin
+**Key cases:**
 
-Two adjacent traces couple through mutual inductance $L_m$ and mutual capacitance $C_m$:
+| Load | $\rho$ | Behavior |
+|---|---|---|
+| Matched ($Z_t = Z_0$) | 0 | No reflection |
+| Open ($Z_t = \infty$) | +1 | Wave doubles |
+| Short ($Z_t = 0$) | −1 | Wave inverts |
 
-$$V_{\text{noise},L_m} = L_m \frac{dI_\text{driver}}{dt}, \qquad I_{\text{noise},C_m} = C_m \frac{dV_\text{driver}}{dt}$$
-*(chap3.pdf, p.4–5)*
+## Lattice (Bounce) Diagrams
 
-Inductive noise adds at the near end and subtracts at the far end. Capacitive noise adds at both ends (but in opposite polarity relative to inductive at far end).
+A visual tool tracking wave amplitude vs. time. Each step = one TD. After each bounce:
+- Multiply reflected wave by $\rho$ at that end
+- Add to cumulative voltage at that point
 
-### NEXT and FEXT formulas (Case 1 — matched, long line)
+**Overdriven** ($Z_0 > Z_s$, i.e., $V_i > V_{ss}$): initial overshoot → ringing above steady state.  
+**Underdriven** ($Z_0 < Z_s$, i.e., $V_i < V_{ss}$): gradual rise to steady state.
 
-**Near-End CrossTalk (NEXT):**
+**Rise time effect:** When $\tau_r < 2\text{TD}$, reflections arrive before the input transition is complete — they appear as glitches.
 
-$$A = \frac{V_\text{input}}{4}\left(\frac{L_M}{L} + \frac{C_M}{C}\right)$$
-*(chap3.pdf, p.13)*
+## Reactive Loads
 
-NEXT is a **flat-top pulse** of duration $2\,TD$ (round-trip time), magnitude $A$.
-
-**Far-End CrossTalk (FEXT):**
-
-$$B = -\frac{V_\text{input}\, X\sqrt{LC}}{2T_r}\left(\frac{L_M}{L} - \frac{C_M}{C}\right)$$
-*(chap3.pdf, p.13)*
-
-FEXT is a **pulse** of duration $T_r$ arriving at time $TD$. It is zero in a symmetric stripline (where $L_M/L = C_M/C$).
-
-### Mismatch correction
-
-If the victim line is terminated with $R \neq Z_0$:
-
-$$V_x = V_\text{crosstalk}\left(1 + \frac{R - Z_0}{R + Z_0}\right)$$
-*(chap3.pdf, p.15)*
-
-### Coupling factor
-
-$$K = \frac{L_{12}}{\sqrt{L_{11}L_{22}}}$$
-*(chap3.pdf, p.21)*
-
-$K$ quantifies how tightly two lines are coupled (0 = no coupling, 1 = perfect coupling).
-
-### Odd- and Even-mode impedances
-
-When two lines switch together in phase (even mode) or in opposite phase (odd mode):
-
-| Mode | Inductance | Capacitance | Impedance |
+| Load | Initial behavior | Long-term behavior | Effect |
 |---|---|---|---|
-| Odd | $L_{11} - L_{12}$ (↓) | $C_{11} + C_m$ (↑) | $Z_\text{odd} < Z_0$ |
-| Even | $L_{11} + L_{12}$ (↑) | $C_{11} - C_m$ (↓) | $Z_\text{even} > Z_0$ |
+| Capacitor $C_L$ | Short ($\rho = -1$) | Open ($\rho = +1$) | Slows data rate |
+| Inductor $L$ | Open ($\rho = +1$) | Short ($\rho = -1$) | Spike at $t=2$TD |
 
-*(chap3.pdf, p.25–29)*
+## Termination Schemes
 
-- Odd mode: underdriven (source impedance too high) → slow settling  
-- Even mode: overdriven (source impedance too low) → ringing possible  
-- Stripline: $TD_\text{odd} = TD_\text{even}$ → no velocity variation  
-- Microstrip: $TD_\text{odd} \neq TD_\text{even}$ → different propagation speeds
-
-### SLEM — Single-Line Equivalent Model
-
-For a three-line bus, line 2 effective impedance depends on its switching pattern relative to neighbours:
-
-**All in phase (common mode):**
-$$Z_{2,\text{eff}} = \sqrt{\frac{L_{22}+L_{12}+L_{23}}{C_{22}-C_{12}-C_{23}}}$$
-*(chap3.pdf, p.33)*
-
-**Center out of phase with both neighbours (differential mode):**
-$$Z_{2,\text{eff}} = \sqrt{\frac{L_{22}-L_{12}-L_{23}}{C_{22}+C_{12}+C_{23}}}$$
-
-These two modes produce the **worst-case** impedance extremes.
-
-### Termination for differential pairs
-
-**Pi-termination** ($R_1 = R_2 = Z_\text{even}$ to ground, $R_3$ between lines):
-
-$$R_3 = \frac{2 Z_\text{even} Z_\text{odd}}{Z_\text{even} - Z_\text{odd}}$$
-*(chap3.pdf, p.39)*
-
-**T-termination** ($R_1 = R_2 = Z_\text{odd}$ in series, $R_3$ to ground):
-
-$$R_3 = \frac{1}{2}(Z_\text{even} - Z_\text{odd})$$
-*(chap3.pdf, p.40)*
-
-### Crosstalk minimisation rules
-
-1. Widen spacing $S$ between traces (most effective)
-2. Minimise height $H$ above ground plane for lower impedance → less coupling
-3. Route on stripline to eliminate FEXT velocity effect
-4. Keep parallel run lengths short
-5. Route critical signals on orthogonal layers
+| Method | Mechanism | Pros | Cons |
+|---|---|---|---|
+| Series source | $R_s$ in series with driver | Small variation | Extra component |
+| Load (parallel) | $R_L = Z_0$ at far end | No reflections reaching source | DC current, power |
+| AC load | $R = Z_0$, series $C$ at load; $RC = 1\text{–}2\tau_r$ | No DC dissipation | Slows edges |
 
 ---
 
-## Chapter 4 — Coupled Microstrip Line and Decoupling Techniques
+# Chapter 3 — Crosstalk
 
-### Why FEXT exists in microstrip but not ideal stripline
+## Physical Mechanism
 
-In a microstrip, even-mode and odd-mode waves travel at **different speeds** because $\varepsilon_{eff}$ is different for each mode:
+Two parallel conductors exchange energy through their electromagnetic fields:
 
-$$T_d = TD_{even} - TD_{odd} > 0$$
+- **Mutual inductance $L_m$** (magnetic field coupling) → voltage noise proportional to $dI/dt$:
 
-The FEXT voltage is proportional to this time difference:
+$$V_{\text{noise},L_m} = L_m \frac{dI_{\text{driver}}}{dt}$$
 
-$$|V_4(TD_{even})| = V_{max} \cdot \min\!\left(\frac{T_d}{t_r},\, 1\right)$$
-*(chap4.pdf, p.14)*
+*(chap3.pdf, p.4)*
 
-$$V_{max} = \frac{Z_0}{Z_{even} + 2Z_0 + Z_{odd}}\,V_s$$
-*(chap4.pdf, p.14)*
+- **Mutual capacitance $C_m$** (electric field coupling) → current noise proportional to $dV/dt$:
 
-In an ideal stripline $T_d = 0$, so FEXT $= 0$.
+$$I_{\text{noise},C_m} = C_m \frac{dV_{\text{driver}}}{dt}$$
 
-### Even- and odd-mode time delays
+*(chap3.pdf, p.5)*
 
-$$TD_{even} = l\sqrt{(L_s + L_m)C_s}$$
-*(chap4.pdf, p.10)*
+## Near-End vs. Far-End Crosstalk
 
-$$TD_{odd} = l\sqrt{(L_s - L_m)(C_s + 2C_m)}$$
-*(chap4.pdf, p.10)*
+| Type | Location | Composed of | Timing |
+|---|---|---|---|
+| **NEXT** (backward) | Near end | Sum: $I(L_m) + I(C_m)$ | Begins at $t=0$, lasts $2$TD |
+| **FEXT** (forward) | Far end | Difference: $I(C_m) - I(L_m)$ | Arrives at $t=$TD, lasts $\approx\tau_r$ |
 
-### Front-end decoupling capacitor $C_f$
+*(chap3.pdf, pp.11–12)*
 
-Place a capacitor $C_f$ between the two lines at the source end. This adds $2C_f/l$ per unit length to the odd-mode circuit only, slowing the odd mode to match the even mode:
+## Crosstalk Magnitudes (Matched Terminations, $T_r < 2$TD)
 
-$$TD^c_{odd} = l\sqrt{\left(C_s + 2C_m + \frac{2C_f}{l}\right)(L_s - L_m)}$$
-*(chap4.pdf, p.23)*
+$$A_{\text{NEXT}} = \frac{V_{\text{in}}}{4}\left(\frac{L_m}{L} + \frac{C_m}{C}\right)$$
 
-**Design goal:** choose $C_f$ so $TD^c_{odd} = TD_{even}$ ($T_d = 0$).
+$$B_{\text{FEXT}} = -\frac{V_{\text{in}} \cdot X\sqrt{LC}}{2T_r}\left(\frac{L_m}{L} - \frac{C_m}{C}\right)$$
 
-**Trade-off:** a lumped $C_f$ reduces FEXT but **increases NEXT** (the capacitor charging current appears as a near-end spike) and degrades eye diagram at high bit rates.
+*(chap3.pdf, p.13)*
 
-### RC time constant of the $C_f$ circuit
+**Key insight:** NEXT is **length-independent** in the long-line case; FEXT always **depends on both rise time and length**.
 
-$$\tau = 2R_t C_f, \qquad R_t = \frac{Z_0 Z_{odd}}{Z_0 + Z_{odd}}$$
-*(chap4.pdf, p.28)*
+For $T_r > 2$TD (short-line): $A_{\text{NEXT}} \times \frac{2\text{TD}}{T_r}$; FEXT unchanged.
 
-### Distributed decoupling capacitors
+## The L and C Matrices
 
-Distributing $C_f$ as $N$ smaller capacitors spaced $\Delta l = \lambda/10$ apart:
+For an $N$-conductor system, the L-matrix has self-inductances on the diagonal and mutual inductances off the diagonal. The C-matrix has total capacitances on the diagonal (positive) and mutual capacitances off the diagonal (negative):
+$C_{NN}$ = total cap of line $N$; $C_{NM} = -C_m$ between lines $N$ and $M$.
 
-- Eliminates FEXT ($\approx 0$)
-- Reduces NEXT (no large spike — gradual charging)
-- Restores $|S_{11}|$ and eye diagram performance
-- Much better than lumped $C_f$ at high frequencies
+## Odd and Even Mode Analysis
 
-The optimal spacing is at or below $\lambda/10$ at the signal's 3-dB bandwidth:
+When two identical lines are driven simultaneously:
 
-$$f_{3\text{dB}} = \frac{0.35}{t_r}, \qquad \lambda = \frac{3\times10^8}{f_{3\text{dB}}\sqrt{\varepsilon_{eff}}}$$
-*(chap4.pdf, p.39)*
+**Odd mode** (opposite polarity, $V_2 = -V_1$):
+
+$$Z_{\text{odd}} = \sqrt{\frac{L_{11} - L_{12}}{C_{11} + C_m}}, \quad \text{TD}_{\text{odd}} = \sqrt{(L_{11}-L_{12})(C_{11}+C_m)}$$
+
+*(chap3.pdf, p.27)*
+
+**Even mode** (same polarity, $V_2 = V_1$):
+
+$$Z_{\text{even}} = \sqrt{\frac{L_{11} + L_{12}}{C_{11} - C_m}}, \quad \text{TD}_{\text{even}} = \sqrt{(L_{11}+L_{12})(C_{11}-C_m)}$$
+
+*(chap3.pdf, p.29)*
+
+**Always true:**
+- $Z_{\text{odd}} < Z_0 < Z_{\text{even}}$
+- Odd mode → underdriven; Even mode → overdriven
+- Crosstalk does **not** cause velocity variations in striplines (TDs equal), but **does** in microstrips.
+
+## SLEM (Single-Line Equivalent Model)
+
+For a target line surrounded by neighbors switching out of phase (worst case differential):
+
+$$C_{\text{eq}} = C_{22} - C_{12} + C_{23}, \quad L_{\text{eq}} = L_{22} + L_{12} - L_{23}$$
+
+*(chap3.pdf, p.34)*
+
+Use SLEM early in design; full coupled simulation for final verification.
+
+## Crosstalk Minimization Rules
+
+1. Widen spacing $S$ between lines.
+2. Minimize height $H$ above ground plane.
+3. Use differential routing for critical signals.
+4. Route signals on adjacent layers orthogonally.
+5. Use stripline or embedded microstrip.
+6. Minimize parallel run lengths.
+7. Use slower edge rates (with caution).
 
 ---
 
-## Chapter 5 — Nonideal Interconnect Issues
+# Chapter 4 — Coupled Microstrip and FEXT Suppression
 
-### DC resistance
+## Why FEXT Exists in Microstrips (but not Striplines)
 
-$$R = \frac{\rho L}{Wt} \quad \Omega$$
-*(chap5.pdf, p.4)*
+In a microstrip, the even-mode and odd-mode waves travel at **different velocities**:
 
-Significant only for long lines, narrow traces, or multiload buses.
+$$\text{TD}_{\text{even}} = \ell\sqrt{(L_s+L_m)C_s} \neq \text{TD}_{\text{odd}} = \ell\sqrt{(L_s-L_m)(C_s+2C_m)}$$
 
-### Skin effect
+*(chap4.pdf, p.10)*
 
-At high frequencies, current crowds to the conductor surface. The skin depth is:
+The time difference $T_d = \text{TD}_{\text{even}} - \text{TD}_{\text{odd}}$ causes the even and odd mode components of FEXT to arrive at different times, producing a net FEXT pulse. In a stripline, both modes are fully embedded in the dielectric, so $T_d = 0$ and FEXT cancels.
 
-$$\delta = \sqrt{\frac{2\rho}{\omega\mu}} = \sqrt{\frac{\rho}{\pi F\mu}} \quad \text{(meters)}$$
+## FEXT Magnitude Estimate
+
+$$|V_4(\text{TD}_{\text{even}})| \approx V_{\max} \cdot \min\!\left(\frac{T_d}{t_r},\, 1\right)$$
+
+*(chap4.pdf, p.14)*
+
+## Front-End Decoupling Capacitor
+
+Add $C_f$ at the near end of the quiet line to **increase** $\text{TD}_{\text{odd}}$ until $\text{TDc}_{\text{odd}} = \text{TD}_{\text{even}}$, making $T_d = 0$.
+
+**Required $C_f$** is found by solving $T_d = \ell\sqrt{(L_s-L_m)(C_s+2C_m+2C_f/\ell)} - \text{TD}_{\text{even}} = 0$.
+
+**Trade-off:** FEXT is reduced, but **NEXT increases** and eye quality degrades at high bit rates.
+
+**Fix:** Distribute the capacitance as $\Delta C_f$ at $\lambda/10$ intervals → FEXT ≈ 0, good eye, better S-parameters.
+
+---
+
+# Chapter 5 — Non-ideal Interconnect Issues
+
+## Types of Transmission Line Losses
+
+| Type | Source | Effect |
+|---|---|---|
+| DC conductor | Resistivity, small cross-section | Amplitude drop |
+| Skin effect (AC conductor) | Current concentrates on skin at high $f$ | $R \propto \sqrt{F}$, rounding of edges |
+| Dielectric | Loss tangent of substrate | Additional shunt conductance |
+
+## Skin Effect
+
+At high frequency, current crowds to a depth $\delta$ (skin depth) below the conductor surface:
+
+$$\delta = \sqrt{\frac{\rho}{\pi F \mu}} \quad \text{meters}$$
+
 *(chap5.pdf, p.6)*
 
-**63% of current** flows within one skin depth $\delta$.
+~63% of current flows within one skin depth. As $F$ increases, $\delta$ decreases → $R \propto \sqrt{F}$.
 
-Resistance increases as $\sqrt{F}$ above the transition frequency $F_t$ (where $\delta = t$).
+**AC resistance of a microstrip:**
 
-### AC resistance — microstrip signal conductor
+$$R_{\text{ac}} \approx \sqrt{\rho\pi\mu F}\left(\frac{1}{W} + \frac{1}{6H}\right) \quad \Omega/\text{m}$$
 
-$$R_{\text{ac signal}} \approx \frac{\rho}{W\delta} = \frac{\sqrt{\rho\pi\mu F}}{W} \quad \Omega/\text{m}$$
-*(chap5.pdf, p.9)*
-
-### Ground return AC resistance
-
-The ground return current follows a Lorentzian distribution. 79.5% is within $\pm 3H$, so effective ground width $\approx 6H$:
-
-$$R_{\text{ac ground}} \approx \frac{\sqrt{\rho\pi\mu F}}{6H} \quad \Omega/\text{m}$$
-*(chap5.pdf, p.11)*
-
-### Total microstrip AC resistance
-
-$$R_{\text{ac microstrip}} \approx \sqrt{\rho\pi\mu F}\!\left(\frac{1}{W} + \frac{1}{6H}\right) \quad \Omega/\text{m}$$
 *(chap5.pdf, p.12)*
 
-### SPICE combined resistance
+## Surface Resistance
 
-$$R_\text{total} \approx \sqrt{R_\text{ac}^2 + R_\text{dc}^2}$$
-*(chap5.pdf, p.10)*
+$$R_{\text{ac}} = R_S \sqrt{F}, \quad R_S = \sqrt{\rho\pi\mu} \quad \Omega\cdot\sqrt{\text{s}}/\text{square}$$
 
-### Surface resistance
+*(chap5.pdf, p.15–16)*
 
-$$R_s = \frac{L}{W}\sqrt{\rho\pi\mu} \quad \text{ohms}\cdot\sqrt{\text{s}}$$
-*(chap5.pdf, p.16)*
+$R_S$ depends only on the conductor material and geometry — not frequency. Roughness (tooth structure) can increase losses by 10–50%.
 
-so that $R_\text{ac} = R_s\sqrt{F}$. *(chap5.pdf, p.15)*
+## Dielectric Loss Tangent
 
-### Stripline AC resistance
+$$\tan\delta_d = \frac{\varepsilon''}{\varepsilon'} = \frac{1}{2\rho\pi F\varepsilon}$$
 
-Parallel combination of the microstrip resistance seen from the top ground plane ($H_1$) and the bottom ground plane ($H_2$):
-
-$$R_{\text{ac stripline}} = \frac{R_{(H1)} \cdot R_{(H2)}}{R_{(H1)} + R_{(H2)}} \quad \Omega/\text{m}$$
-*(chap5.pdf, p.13)*
-
-### Dielectric losses
-
-The dielectric constant becomes complex under a time-varying field:
-
-$$\varepsilon = \varepsilon' - j\varepsilon''$$
-*(chap5.pdf, p.20)*
-
-**Loss tangent** (easier to look up in data sheets than $\varepsilon''$):
-
-$$\tan\delta_d = \frac{\varepsilon''}{\varepsilon'}$$
 *(chap5.pdf, p.21)*
 
-This adds a **shunt conductance** per unit length to the TX-line model:
+This results in a shunt conductance per unit length:
 
-$$G = \frac{\varepsilon''}{\varepsilon'}(2\pi F C_{11}) \quad \text{S/m}$$
+$$G = \tan\delta_d \cdot 2\pi F C_{11} \quad \text{S/m}$$
+
 *(chap5.pdf, p.21)*
 
-**Important:** For FR4 up to 15 GHz, dielectric loss dominates over conductor loss. *(chap5.pdf, p.5)*
+For FR4: $\tan\delta \approx 0.02$.
 
-### FR4 dielectric constant variation
+## Effect on Signal Waveforms
 
-FR4 is not a constant-$\varepsilon_r$ material. First-order model:
+A square wave contains harmonics at $f_0, 3f_0, 5f_0, \ldots$ Higher harmonics are attenuated more by $R \propto \sqrt{F}$:
+- **Edges round** (loss of high-frequency content)
+- **Amplitude decreases** (even fundamental is attenuated over long lines)
 
-$$\varepsilon_r = \varepsilon_\text{rsn}V_\text{rsn} + \varepsilon_\text{gls}V_\text{gls}$$
+## Variations in FR4 Dielectric Constant
+
+$\varepsilon_r$ of FR4 varies with frequency, temperature, moisture, and sample-to-sample variations due to the woven glass cloth construction. First-order estimate:
+
+$$\varepsilon_{r,\text{FR4}} \approx V_{\text{gls}}\varepsilon_{r,\text{gls}} + (1-V_{\text{gls}})\varepsilon_{r,\text{epoxy}}$$
+
 *(chap5.pdf, p.29)*
 
-Empirical formula (frequency in kHz):
+## Serpentine Traces
 
-$$\varepsilon_r(V_\text{rsn}, F) = 6.32 - [2.17 + 0.168\log_{10}F\,(\text{kHz})]\,V_\text{rsn}$$
-*(chap5.pdf, p.29)*
+Used for length equalization when real estate is limited. **Problem:** the parallel sections couple to each other, causing part of the signal to arrive early → **ledges** on the waveform.
 
-$\varepsilon_r$ decreases with frequency (4.7 at low MHz → 3.9 at 1 GHz for typical FR4).
+**Rules:**
+- Spacing between parallel sections $S \geq 3H$ to $4H$
+- Minimize parallel section length $L_p$
+- **Never serpentine clock traces**
 
-### Serpentine traces
+## Intersymbol Interference (ISI)
 
-Due to coupling between adjacent parallel sections, part of the signal shortcuts through crosstalk (Path 2) and arrives **early**:
+When unsettled reflections, crosstalk, or ringing **corrupts the next bit**. Most severe when **period < 2 × TD**.
 
-- Duration of "ledge" $\propto$ parallel section length $L_p$
-- Ledge voltage $\propto$ spacing $S$
+Efficiently simulate with three periodic patterns: `010101...`, `001100...`, `000111...`.
 
-**Rules:** $S \geq 3H$ to $4H$; minimise $L_p$; do not serpentine clock traces. *(chap5.pdf, p.33)*
+## 90° Bends
 
-### Intersymbol Interference (ISI)
+A 90° corner adds excess capacitance:
 
-ISI occurs when reflections or noise from a previous bit have not settled before the next transition. Worst when:
+$$C_{90°} \approx C_{11} \cdot w$$
 
-$$T_\text{period} < 2 \times TD_\text{line}$$
-
-**Rules:** minimise reflections; keep traces short; avoid tightly coupled serpentines; minimise crosstalk. *(chap5.pdf, p.38)*
-
-### 90° bends
-
-Excess capacitance at a corner (area $\approx 0.054$ squares):
-
-$$C_{90°\text{ bend}} \approx C_{11}\,w$$
 *(chap5.pdf, p.39)*
 
-Mitigation: use 45° bends or chamfer the corner.
+Mitigation: chamfer (45° cut) or use 45° bends. Rounding works best but may conflict with layout tools.
 
-### Topology effects
+## Topology Effects
 
-- **Balanced T** (equal leg lengths, equal loading): clean step response.
-- **Unbalanced T** ($L_1 \neq L_2$): severe ringing from multiple reflections bouncing between junction and receivers.
-
-**Rules:** symmetric topology (equal length and loading on every branch); minimise discontinuity at the junction. *(chap5.pdf, p.44)*
-
----
-
-## Quick Reference — Key Formulas
-
-| Concept | Formula | Source |
-|---|---|---|
-| Highest frequency | $f_2 = 0.32/t_r$ | chap1.pdf, p.6 |
-| TX line criterion | trace delay $\geq t_r/10$ | chap1.pdf, p.7 |
-| Lossless $Z_o$ | $\sqrt{L/C}$ | chap2.pdf, p.4 |
-| Microstrip $Z_o$ | $\frac{87}{\sqrt{\varepsilon_r+1.41}}\ln\frac{5.98H}{0.8W+T}$ | chap2.pdf, p.7 |
-| Stripline $Z_o$ | $\frac{60}{\sqrt{\varepsilon_r}}\ln\frac{4H}{0.67\pi(T+0.8W)}$ | chap2.pdf, p.8 |
-| Propagation delay | $TD = x\sqrt{\varepsilon_r}/c$ | chap2.pdf, p.10 |
-| Reflection coeff. | $\rho = (Z_t-Z_o)/(Z_t+Z_o)$ | chap2.pdf, p.18 |
-| NEXT (matched) | $A = \frac{V}{4}(L_M/L+C_M/C)$ | chap3.pdf, p.13 |
-| FEXT (matched) | $B = -\frac{VX\sqrt{LC}}{2T_r}(L_M/L-C_M/C)$ | chap3.pdf, p.13 |
-| Odd-mode $Z$ | $\sqrt{(L_{11}-L_{12})/(C_{11}+C_m)}$ | chap3.pdf, p.27 |
-| Even-mode $Z$ | $\sqrt{(L_{11}+L_{12})/(C_{11}-C_m)}$ | chap3.pdf, p.29 |
-| Skin depth | $\delta = \sqrt{\rho/(\pi F\mu)}$ | chap5.pdf, p.6 |
-| AC resistance | $R_s\sqrt{F}$ | chap5.pdf, p.15 |
-| Loss tangent | $\tan\delta_d = \varepsilon''/\varepsilon'$ | chap5.pdf, p.21 |
-| Dielectric conductance | $G = (\varepsilon''/\varepsilon')(2\pi FC_{11})$ | chap5.pdf, p.21 |
+- **Balanced T**: symmetric topology preserves signal integrity.
+- **Unbalanced T**: asymmetric stub lengths or loads → severe waveform distortion.
+- Lessons: keep T-junction stubs equal in length and loading; minimize discontinuities at junctions.

@@ -1,323 +1,189 @@
-# Exam Preparation — Examples and Key Formulas
+---
+title: HSDSD Exam Prep — Key Formulas and Worked Examples
+---
 
-**Course:** High-Speed PC Board System Design (HSDSD), NTUST  
-**Format:** Closed-book midterm
+# Exam Prep: Key Formulas and Worked Examples
 
 ---
 
-## Chapter 1 Examples
+## Part 1 — Key Formula Sheet
 
-### Example 1.1 — Is a trace long enough to need TX-line treatment?
+### Chapter 1
 
-**Given:** Rise time $t_r = 500\,\text{ps}$. Trace delay $TD = 40\,\text{ps}$.
+| Formula | Meaning | Reference |
+|---|---|---|
+| $f_{\max} = 0.32/\tau_r$ | Highest frequency of interest | chap1.pdf p.6 |
+| $T_D \geq t_r/10$ | TX line criterion | chap1.pdf p.7 |
 
-**Question:** Must this trace be modelled as a transmission line?
+### Chapter 2
 
-**Method:** Criterion is $TD \geq t_r/10$.
+| Formula | Meaning | Reference |
+|---|---|---|
+| $Z_0 = \sqrt{L/C}$ | Characteristic impedance (lossless) | chap2.pdf p.9 |
+| $Z_0 \approx \frac{87}{\sqrt{\varepsilon_r+1.41}}\ln\!\frac{5.98H}{0.8W+T}$ | Microstrip impedance | chap2.pdf p.9 |
+| $Z_0 \approx \frac{60}{\sqrt{\varepsilon_r}}\ln\!\frac{4H}{0.67\pi(T+0.8W)}$ | Symmetric stripline impedance | chap2.pdf p.10 |
+| $v = c/\sqrt{\varepsilon_r}$, $\text{TD} = x\sqrt{\varepsilon_r}/c$ | Propagation velocity and delay | chap2.pdf p.11 |
+| $\text{TD} = \sqrt{LC}$, $Z_0 = \sqrt{L/C}$ | Alternate forms → $L=\text{TD}\cdot Z_0$, $C=\text{TD}/Z_0$ | chap2.pdf p.11 |
+| $\varepsilon_e = \frac{\varepsilon_r+1}{2}+\frac{\varepsilon_r-1}{2}(1+\frac{12H}{W})^{-1/2}+F-0.217(\varepsilon_r-1)\frac{T}{\sqrt{WH}}$ | Effective $\varepsilon$ for microstrip | chap2.pdf p.12 |
+| Segments $\geq 10 \cdot \text{TD}/T_r$ | SPICE model segmentation | chap2.pdf p.14 |
+| $V_i = V_s Z_0/(Z_0+Z_s)$ | Initial wave voltage | chap2.pdf p.17 |
+| $\rho = (Z_t-Z_0)/(Z_t+Z_0)$ | Reflection coefficient | chap2.pdf p.18 |
 
-$$\frac{t_r}{10} = \frac{500}{10} = 50\,\text{ps}$$
+### Chapter 3
 
-$TD = 40\,\text{ps} < 50\,\text{ps}$ → **No TX-line model needed.**
+| Formula | Meaning | Reference |
+|---|---|---|
+| $V_{\text{noise}} = L_m\,dI/dt$ | Inductive coupling noise | chap3.pdf p.4 |
+| $I_{\text{noise}} = C_m\,dV/dt$ | Capacitive coupling noise | chap3.pdf p.5 |
+| $A_{\text{NEXT}} = \frac{V_{\text{in}}}{4}(\frac{L_m}{L}+\frac{C_m}{C})$ | NEXT peak (matched, $T_r<2$TD) | chap3.pdf p.13 |
+| $B_{\text{FEXT}} = -\frac{V_{\text{in}}X\sqrt{LC}}{2T_r}(\frac{L_m}{L}-\frac{C_m}{C})$ | FEXT peak (matched, $T_r<2$TD) | chap3.pdf p.13 |
+| $Z_{\text{odd}}=\sqrt{(L_{11}-L_{12})/(C_{11}+C_m)}$ | Odd-mode impedance | chap3.pdf p.27 |
+| $Z_{\text{even}}=\sqrt{(L_{11}+L_{12})/(C_{11}-C_m)}$ | Even-mode impedance | chap3.pdf p.29 |
+| $K = L_{12}/\sqrt{L_{11}L_{22}}$ | Inductive coupling factor | chap3.pdf p.21 |
 
-*(chap1.pdf, p.7)*
+### Chapter 5
 
----
-
-### Example 1.2 — Highest frequency of interest
-
-**Given:** Clock with rise time $t_r = 200\,\text{ps}$.
-
-$$f_2 = \frac{1}{\pi t_r} = \frac{1}{\pi \times 200\times10^{-12}} \approx 1.59\,\text{GHz}$$
-*(chap1.pdf, p.6)*
-
----
-
-## Chapter 2 Examples
-
-### Example 2.1 — Microstrip impedance
-
-**Given:** $W = 5\,\text{mils}$, $H = 4\,\text{mils}$, $T = 1\,\text{mil}$, $\varepsilon_r = 4.2$.
-
-$$Z_o \approx \frac{87}{\sqrt{4.2 + 1.41}} \ln\!\left(\frac{5.98 \times 4}{0.8 \times 5 + 1}\right) = \frac{87}{\sqrt{5.61}} \ln\!\left(\frac{23.92}{5}\right)$$
-
-$$= \frac{87}{2.368} \times \ln(4.784) = 36.7 \times 1.565 \approx 57.4\,\Omega$$
-*(chap2.pdf, p.7)*
-
----
-
-### Example 2.2 — Propagation delay
-
-**Given:** Stripline trace, $l = 10\,\text{in.}$, $\varepsilon_r = 4.0$.
-
-$$TD = \frac{l\sqrt{\varepsilon_r}}{c} = \frac{10\,\text{in.} \times 0.0254\,\text{m/in.} \times \sqrt{4}}{3\times10^8} = \frac{0.254 \times 2}{3\times10^8} \approx 1.69\,\text{ns}$$
-*(chap2.pdf, p.10)*
-
-Alternatively: for stripline with $\varepsilon_r = 4$, propagation delay $= \sqrt{4}/c \approx 170\,\text{ps/in.}$
+| Formula | Meaning | Reference |
+|---|---|---|
+| $\delta = \sqrt{\rho/(\pi F\mu)}$ | Skin depth | chap5.pdf p.6 |
+| $R_{\text{ac}} \approx \sqrt{\rho\pi\mu F}(1/W+1/6H)$ | AC resistance, microstrip (approx) | chap5.pdf p.12 |
+| $R_{\text{ac}} = R_S\sqrt{F}$ | AC resistance via surface resistance | chap5.pdf p.15 |
+| $\tan\delta_d = \varepsilon''/\varepsilon'$ | Dielectric loss tangent | chap5.pdf p.21 |
+| $G = \tan\delta_d \cdot 2\pi F C_{11}$ | Dielectric shunt conductance | chap5.pdf p.21 |
+| $C_{90°} \approx C_{11}\cdot w$ | Excess capacitance at 90° bend | chap5.pdf p.39 |
 
 ---
 
-### Example 2.3 — Lattice diagram / initial wave and reflections
+## Part 2 — Worked Example: Chapter 2
 
-**Given:** $V_s = 0\to 2\,\text{V}$, $Z_s = 30\,\Omega$, $Z_o = 50\,\Omega$, open-circuit load ($Z_L = \infty$).
+### Problem (from chap2.pdf, pp.37–43)
 
-**Initial voltage launched:**
+A driver ($Z_s = 30\,\Omega$, edge rate $t_r = 100$ ps, swing 0 to 2 V) drives a microstrip trace ($Z_0 = 50\,\Omega$, length 5 in., $\varepsilon_r = 4.0$, $T = 1.0$ mil, $W = 5$ mil).
 
-$$V_i = V_s \frac{Z_o}{Z_s + Z_o} = 2 \times \frac{50}{30 + 50} = 2 \times 0.625 = 1.25\,\text{V}$$
-*(chap2.pdf, p.17)*
+**Step 1: Find H (trace height)**
 
-**Reflection at load ($Z_L = \infty$):**
+Using $Z_0 = 50\,\Omega$ in the microstrip formula:
 
-$$\rho_L = \frac{\infty - 50}{\infty + 50} = +1 \quad \Rightarrow \quad V_\text{load} = 1.25 + 1.25 = 2.5\,\text{V}$$
+$$50 = \frac{87}{\sqrt{4.0+1.41}}\ln\!\frac{5.98H}{0.8(5)+1.0} \implies H = 3.2 \text{ mils}$$
 
-**Reflection at source ($Z_s = 30\,\Omega$):**
+*(chap2.pdf, p.39)*
 
-$$\rho_s = \frac{30 - 50}{30 + 50} = -0.25 \quad \Rightarrow \quad V_\text{reflected back} = -0.25 \times 1.25 = -0.3125\,\text{V}$$
+**Step 2: Find effective $\varepsilon_e$**
 
-Load voltage after second arrival: $2.5 - 0.625 = 1.875\,\text{V}$ (continues oscillating to $2\,\text{V}$).
+$W/H = 5/3.2 = 1.5625 > 1$, so $F = 0$.
 
-*(chap2.pdf, p.17–20)*
+$$\varepsilon_e = \frac{4+1}{2}+\frac{4-1}{2}\left(1+\frac{12(3.2)}{5}\right)^{-1/2}+0-0.217(4-1)\frac{1.0}{\sqrt{5.0\times3.2}} = 2.84$$
+
+*(chap2.pdf, p.40)*
+
+**Step 3: Find propagation velocity and TD**
+
+$$v = \frac{3\times10^8}{\sqrt{2.84}} = 1.78\times10^8 \text{ m/s}$$
+
+$$\text{TD} = \frac{5\text{ in.}\times 0.0254\text{ m/in.}}{1.78\times10^8\text{ m/s}} = 713\text{ ps}$$
+
+*(chap2.pdf, p.40)*
+
+**Step 4: Determine wave shape (lattice diagram)**
+
+Initial voltage: $V_i = 2 \times 50/(50+30) = 1.25$ V
+
+$\rho_{\text{load}} = (∞-50)/(∞+50) = +1$ (open load assumed)
+
+At $t = \text{TD}$: load sees $1.25 + 1.25(+1) = 2.5$ V
+
+$\rho_{\text{source}} = (30-50)/(30+50) = -0.25$
+
+At $t = 2\text{TD}$: source reflection = $1.25\times(-0.25) = -0.3125$ V, so source sees $1.25 - 0.3125 = 0.9375$ V above steady state.
+
+Steady state = $2 \times \infty/(\infty+30) \approx 2$ V (for open load). The ringing settles at 2 V.
+
+*(chap2.pdf, p.41)*
+
+**Step 5: Number of SPICE segments**
+
+Since $t_r < 2\text{TD}$ ($100\text{ ps} < 1426\text{ ps}$), reflections matter:
+
+$$N \geq 10\left(\frac{713\text{ ps}}{100\text{ ps}}\right) = 71.3 \implies \text{use }72$$
+
+*(chap2.pdf, p.42)*
 
 ---
 
-### Example 2.4 — SPICE segment count
+## Part 3 — Worked Example: Chapter 3
 
-**Given:** $l = 5\,\text{in.}$, $v = 1/\sqrt{LC}$, $TD_\text{line} = 5\times134 = 670\,\text{ps}$, $t_r = 100\,\text{ps}$.
+### Problem (from chap3.pdf, pp.17–18 — Example 3.2)
 
-$$N \geq \frac{10 \times l}{v \times t_r} = \frac{10 \times 670\,\text{ps}}{100\,\text{ps}} = 67 \text{ segments}$$
-*(chap2.pdf, p.13)*
+Two coupled lines: $Z_0 = 70\,\Omega$, both ends terminated at 70 Ω, $V_{\text{in}} = 1.0$ V, $T_r = 100$ ps, length $X = 2$ in.
 
----
+Given matrices:
+$$[L] = \begin{bmatrix} L_{11} & L_m \\ L_m & L_{11} \end{bmatrix} \text{nH/in.}, \quad [C] = \begin{bmatrix} C_{11} & -C_m \\ -C_m & C_{11} \end{bmatrix} \text{pF/in.}$$
 
-## Chapter 3 Examples
-
-### Example 3.1 — NEXT and FEXT magnitudes (matched)
-
-**Given:** $V_\text{input} = 1\,\text{V}$, $L_M/L = 0.05$, $C_M/C = 0.03$.
+(Numerical values read from slide; extracted text was partially corrupted — see chap3.pdf p.17 for exact matrix values.)
 
 **NEXT:**
+$$A_{\text{NEXT}} = \frac{1.0}{4}\left(\frac{L_m}{L_{11}} + \frac{C_m}{C_{11}}\right)$$
 
-$$A = \frac{1}{4}(0.05 + 0.03) = \frac{0.08}{4} = 0.02\,\text{V}$$
-*(chap3.pdf, p.13)*
+Check $T_r = 100\text{ ps}$ vs. $2\text{TD}$ to determine which formula applies.
 
-**FEXT** (need $X$, $\sqrt{LC}$, $T_r$; conceptually, the $L_M/L - C_M/C = 0.05 - 0.03 = 0.02$ factor):
+**FEXT:**
+$$B_{\text{FEXT}} = -\frac{1.0 \times 2\text{ in.}\sqrt{L_{11}C_{11}}}{2\times100\text{ ps}}\left(\frac{L_m}{L_{11}} - \frac{C_m}{C_{11}}\right)$$
 
-$$B = -\frac{1 \times X\sqrt{LC}}{2T_r}(0.02)$$
-
-FEXT goes to zero when $L_M/L = C_M/C$ (ideal stripline condition). *(chap3.pdf, p.13)*
-
----
-
-### Example 3.2 — (From slide Example 3.2, chap3.pdf p.16–18)
-
-**Given:** $Z_s = Z_o = 50\,\Omega$, $V_s = 1\,\text{V}$, trace 5 in., $t_r = 100\,\text{ps}$, $v = 134\,\text{ps/in.}$  
-$L_{11} = 7.13\,\text{nH/in.}$, $L_M = 0.54\,\text{nH/in.}$, $C_{11} = 2.85\,\text{pF/in.}$, $C_M = 0.079\,\text{pF/in.}$
-
-$$A = \frac{V_s/2}{4}\left(\frac{L_M}{L_{11}} + \frac{C_M}{C_{11}}\right) = \frac{0.5}{4}\left(\frac{0.54}{7.13} + \frac{0.079}{2.85}\right)$$
-
-$$= 0.125 \times (0.0757 + 0.0277) = 0.125 \times 0.1034 = 0.0129\,\text{V}$$
-
-Wait — the input voltage divides at the source: $V_\text{input} = V_s/2 = 0.5\,\text{V}$... but the slide example gets $\text{NEXT} = 0.082\,\text{V}$. Using $V_\text{input} = V_s \times Z_o/(Z_s+Z_o) = 1 \times 0.5 = 0.5\,\text{V}$ at the launch point but we should plug in the full formula from the slide:
-
-From chap3.pdf p.16–18, NEXT = $0.082\,\text{V}$, FEXT = $-0.137\,\text{V}$. *(chap3.pdf, p.18)*
-
-These are the verified numerical results. Know the formulas and the calculation steps.
+*(chap3.pdf, p.18)*
 
 ---
 
-### Example 3.3 — Odd/Even mode impedance (from slide Example 3.3)
+## Part 4 — Worked Example: Chapter 5
 
-**Given:** Same bus as Example 3.2.
+### Problem (from chap5.pdf, pp.23–27)
 
-$$Z_\text{odd} = \sqrt{\frac{L_{11} - L_M}{C_{11} + C_M}} = \sqrt{\frac{7.13 - 0.54}{2.85 + 0.079}} = \sqrt{\frac{6.59}{2.929}} = \sqrt{2.251} \approx 47.5\,\Omega$$
+Stripline: $W = 5$ mil, $H_1 = H_2 = 10$ mil, $t = 0.63$ mil, $\varepsilon_r = 4.0$.
 
-$$Z_\text{even} = \sqrt{\frac{L_{11} + L_M}{C_{11} - C_M}} = \sqrt{\frac{7.13 + 0.54}{2.85 - 0.079}} = \sqrt{\frac{7.67}{2.771}} = \sqrt{2.768} \approx 52.6\,\Omega$$
+**Step 1: Find $R_S$ (surface resistance)**
 
-*(chap3.pdf, p.25–29, Example 3.3)*
+For copper: $\rho = 1.72\times10^{-8}$ Ω·m, $\mu = \mu_0 = 4\pi\times10^{-7}$ H/m.
 
----
+$$R_S = \sqrt{\rho\pi\mu} = \sqrt{1.72\times10^{-8}\times\pi\times4\pi\times10^{-7}}$$
 
-### Example 3.4 — 8-Bit Bus SLEM (chap3.pdf p.43–50)
+*(chap5.pdf, p.24)*
 
-**Given:** $L_{11} = 7.13\,\text{nH/in.}$, $L_M = 0.54\,\text{nH/in.}$, $C_{11} = 2.85\,\text{pF/in.}$, $C_M = 0.079\,\text{pF/in.}$
+**Step 2: Frequency where $\delta = t$**
 
-**Common mode** (all bits in phase):
+$$\delta = t = 0.63\text{ mil} = 16\,\mu\text{m} \implies F_{\text{skin}} = \frac{\rho}{\pi\mu\delta^2}$$
 
-$$Z_\text{common} = \sqrt{\frac{L_{11}+L_{12}+L_{23}}{C_{11}-C_{12}-C_{23}}} = \sqrt{\frac{7.13+0.54+0.54}{2.85-0.079-0.079}} \approx 55.3\,\Omega$$
-*(chap3.pdf, p.47)*
+Below this frequency: $R = R_{\text{DC}}$. Above: $R \propto \sqrt{F}$. This crossover is ~17 MHz for copper with this geometry.
 
-**Differential mode** (center bit out of phase with both neighbours):
-
-$$Z_\text{diff} = \sqrt{\frac{L_{11}-L_{12}-L_{23}}{C_{11}+C_{12}+C_{23}}} = \sqrt{\frac{7.13-0.54-0.54}{2.85+0.079+0.079}} \approx 44.8\,\Omega$$
-*(chap3.pdf, p.49)*
-
-**Impedance range:** $44.8\,\Omega < Z_o < 55.3\,\Omega$ → may affect signal integrity and reflections.
-
----
-
-### Example 3.5 — Pi and T termination design
-
-**Given:** $Z_\text{odd} = 47.5\,\Omega$, $Z_\text{even} = 52.6\,\Omega$.
-
-**Pi-termination:**
-
-$$R_1 = R_2 = Z_\text{even} = 52.6\,\Omega$$
-
-$$R_3 = \frac{2 \times 52.6 \times 47.5}{52.6 - 47.5} = \frac{4997}{5.1} \approx 980\,\Omega$$
-*(chap3.pdf, p.39)*
-
-**T-termination:**
-
-$$R_1 = R_2 = Z_\text{odd} = 47.5\,\Omega$$
-
-$$R_3 = \frac{1}{2}(52.6 - 47.5) = 2.55\,\Omega$$
-*(chap3.pdf, p.40)*
-
----
-
-## Chapter 4 Examples
-
-### Example 4.1 — FEXT estimation (even/odd decomposition)
-
-**Given:** $Z_{even} = 60\,\Omega$, $Z_{odd} = 40\,\Omega$, $Z_0 = 50\,\Omega$, $V_s = 1\,\text{V}$, $T_d = 20\,\text{ps}$, $t_r = 50\,\text{ps}$.
-
-$$V_{max} = \frac{Z_0}{Z_{even} + 2Z_0 + Z_{odd}}\,V_s = \frac{50}{60 + 100 + 40} \times 1 = \frac{50}{200} = 0.25\,\text{V}$$
-*(chap4.pdf, p.14)*
-
-$$|V_4| = 0.25 \times \min\!\left(\frac{20}{50}, 1\right) = 0.25 \times 0.4 = 0.10\,\text{V}$$
-*(chap4.pdf, p.14)*
-
-**NEXT peak:**
-
-$$V_2(t_r) = \frac{1}{2}\left(\frac{60}{60+50}\right) - \frac{1}{2}\left(\frac{40}{40+50}\right) = \frac{1}{2}(0.545 - 0.444) = 0.050\,\text{V}$$
-*(chap4.pdf, p.14)*
-
----
-
-### Example 4.2 — Required $C_f$ for FEXT cancellation
-
-**Given:** $T_d = 20\,\text{ps}$, $l = 40\,\text{mm}$, $L_s - L_m = 200\,\text{nH/m}$, $C_s + 2C_m = 100\,\text{pF/m}$.
-
-$$T_d = l\sqrt{L_s-L_m}\left(\sqrt{C_s+2C_m+\frac{2C_f}{l}} - \sqrt{C_s+2C_m}\right)$$
-*(chap4.pdf, p.24)*
-
-Solving iteratively or algebraically gives $C_f \approx 0.5\,\text{pF}$ (see chap4 §4.3 for worked example).
-
----
-
-### Example 4.3 — Distributed $C_f$ spacing
-
-**Given:** $t_r = 25\,\text{ps}$, $\varepsilon_{eff} = 3.0$.
-
-$$f_{3\text{dB}} = \frac{0.35}{25\,\text{ps}} = 14\,\text{GHz}$$
-*(chap4.pdf, p.39)*
-
-$$\lambda = \frac{3\times10^8}{14\times10^9 \times \sqrt{3}} = \frac{3\times10^8}{2.42\times10^{10}} \approx 12.4\,\text{mm}$$
-*(chap4.pdf, p.39)*
-
-For $\lambda/10$ spacing: $\Delta l = 1.24\,\text{mm}$ — place one capacitor every 1.24 mm.
-
----
-
-## Chapter 5 Examples
-
-### Example 5.1 — Transition frequency (skin depth = conductor thickness)
-
-**Given:** $t = 0.63\,\text{mil} = 16\,\mu\text{m}$, copper $\rho = 1.72\times10^{-8}\,\Omega\cdot\text{m}$.
-
-Set $\delta = t$ and solve for $F$:
-
-$$\delta = \sqrt{\frac{\rho}{\pi F\mu}} = t \quad \Rightarrow \quad F = \frac{\rho}{\pi\mu t^2}$$
-
-$$F = \frac{1.72\times10^{-8}}{\pi \times 1.256\times10^{-6} \times (16\times10^{-6})^2} = \frac{1.72\times10^{-8}}{1.013\times10^{-15}} \approx 17\,\text{MHz}$$
 *(chap5.pdf, p.26)*
 
-Below 17 MHz: use $R_{dc}$. Above 17 MHz: use $R_{ac} = R_s\sqrt{F}$.
+**Step 3: AC resistance at 400 MHz**
 
----
+$$R_{\text{ac}} = R_S\sqrt{400\times10^6} \times \frac{1}{W} + \frac{1}{W_{\text{ground}}}$$
 
-### Example 5.2 — Series and shunt resistance at 400 MHz
-
-This is the worked example from the slides (symmetric stripline, $W=5$ mils, $H_1=H_2=10$ mils, $t=0.63$ mil, $\varepsilon_r = 4.0$):
-
-**Conductor losses** ($F = 400\,\text{MHz}$, $R_s = 0.0010\,\Omega/(\text{m}\cdot\sqrt{\text{Hz}})$):
-
-$$R_{ac}(400\,\text{MHz}) = 0.0010\sqrt{400\times10^6} = 0.0010 \times 20000 = 20.2\,\Omega/\text{m}$$
 *(chap5.pdf, p.27)*
 
-**Dielectric losses** (with $\tan\delta = 0.013$, $C_{11} = 104\,\text{pF/m}$):
+**Step 4: Shunt conductance at 400 MHz**
 
-$$G = \tan\delta \times 2\pi F \times C_{11} = 0.013 \times 2\pi \times 400\times10^6 \times 104\times10^{-12}$$
+From $\text{PD} = \sqrt{\varepsilon_r}/c$:  
+$C_{11} = \text{PD}/Z_0 = \ldots$ pF/m
 
-$$= 0.0034\,\text{S/m} \quad \Rightarrow \quad 1/G = 294\,\Omega/\text{m}$$
+$$G = \tan\delta \times 2\pi \times 400\times10^6 \times C_{11}$$
+
 *(chap5.pdf, p.27)*
 
-At 400 MHz, the shunt resistance (294 Ω/m) is much larger than the series resistance (20.2 Ω/m) → conductor loss dominates at this frequency. Above ~1 GHz dielectric loss dominates for FR4.
-
 ---
 
-### Example 5.3 — Unbalanced T topology lattice
+## Part 5 — Quick Reference: Common Pitfalls
 
-**Given:** $R_s = Z_o$, $V_s = 0\to2\,\text{V}$, balanced source but $L_1 < L_2$ (unequal legs).
+1. **Don't confuse $T_r < 2$TD with $T_r > 2$TD** for NEXT. Only in the long-line case ($T_r < 2$TD) is NEXT length-independent.
 
-Initial voltage into the T-junction (source matched):
+2. **Odd mode = underdriven** (lower $Z$); **even mode = overdriven** (higher $Z$). Remember: $Z_{\text{odd}} < Z_0 < Z_{\text{even}}$.
 
-$$V_\text{initial} = 2V\frac{Z_o}{Z_o+R_s} = 2 \times 1 \times \frac{1}{2} = 1\,\text{V}$$
-*(chap5.pdf, p.43)*
+3. **FEXT = 0 in striplines** (both modes travel at the same speed). FEXT ≠ 0 in microstrips.
 
-Reflection at junction (each branch = $Z_o$, two in parallel = $Z_o/2$):
+4. **Surface resistance $R_S$** is in Ω·√s/square — it does not have units of Ω alone. $R_{\text{ac}} = R_S\sqrt{F}$.
 
-$$\rho = \frac{Z_o/2 - Z_o}{Z_o/2 + Z_o} = -\frac{1}{3}, \qquad T = 1 + \rho = \frac{2}{3}$$
-*(chap5.pdf, p.43)*
+5. **Segments formula uses TD and $T_r$** — not just the physical length. Always check the ratio.
 
-Voltage arriving at each receiver (shorter leg first): $A = 2/3 + 2/3 = 4/3 = 1.33\,\text{V}$.  
-After next bounces: $8/9$, $16/9$, $20/9$... — severe ringing.
+6. **$\varepsilon_e$ in microstrip** uses $\varepsilon_r$ (the bulk value), not the effective value — don't iterate.
 
----
-
-## Key Formulas for Closed-Book Use
-
-**Chapter 1:**
-
-$$f_2 = \frac{1}{\pi t_r} \approx \frac{0.32}{t_r}, \qquad \text{TX-line criterion: } TD \geq \frac{t_r}{10}$$
-*(chap1.pdf, p.6–7)*
-
-**Chapter 2:**
-
-$$Z_o^{\text{microstrip}} \approx \frac{87}{\sqrt{\varepsilon_r+1.41}}\ln\frac{5.98H}{0.8W+T}$$
-*(chap2.pdf, p.7)*
-
-$$Z_o^{\text{stripline}} \approx \frac{60}{\sqrt{\varepsilon_r}}\ln\frac{4H}{0.67\pi(T+0.8W)}$$
-*(chap2.pdf, p.8)*
-
-$$V_i = V_s\frac{Z_o}{Z_s+Z_o}, \qquad \rho = \frac{Z_t-Z_o}{Z_t+Z_o}$$
-*(chap2.pdf, p.17–18)*
-
-**Chapter 3:**
-
-$$A = \frac{V}{4}\left(\frac{L_M}{L}+\frac{C_M}{C}\right), \qquad B = -\frac{VX\sqrt{LC}}{2T_r}\left(\frac{L_M}{L}-\frac{C_M}{C}\right)$$
-*(chap3.pdf, p.13)*
-
-$$Z_\text{odd} = \sqrt{\frac{L_{11}-L_{12}}{C_{11}+C_m}}, \qquad Z_\text{even} = \sqrt{\frac{L_{11}+L_{12}}{C_{11}-C_m}}$$
-*(chap3.pdf, p.27, 29)*
-
-$$R_3^{\text{Pi}} = \frac{2Z_\text{even}Z_\text{odd}}{Z_\text{even}-Z_\text{odd}}, \qquad R_3^{\text{T}} = \frac{1}{2}(Z_\text{even}-Z_\text{odd})$$
-*(chap3.pdf, p.39–40)*
-
-**Chapter 4:**
-
-$$V_{max} = \frac{Z_0}{Z_{even}+2Z_0+Z_{odd}}V_s, \qquad |V_4| = V_{max}\min\!\left(\frac{T_d}{t_r}, 1\right)$$
-*(chap4.pdf, p.14)*
-
-$$\tau = 2R_t C_f, \quad R_t = \frac{Z_0 Z_{odd}}{Z_0+Z_{odd}}$$
-*(chap4.pdf, p.28)*
-
-**Chapter 5:**
-
-$$\delta = \sqrt{\frac{\rho}{\pi F\mu}}, \qquad R_{ac} = R_s\sqrt{F}$$
-*(chap5.pdf, p.6, 15)*
-
-$$R_{\text{ac,microstrip}} \approx \sqrt{\rho\pi\mu F}\!\left(\frac{1}{W}+\frac{1}{6H}\right)$$
-*(chap5.pdf, p.12)*
-
-$$G = \frac{\varepsilon''}{\varepsilon'}(2\pi F C_{11}), \qquad \tan\delta_d = \frac{\varepsilon''}{\varepsilon'}$$
-*(chap5.pdf, p.21)*
+7. **AC load termination**: $R = Z_0$ AND $RC_L = 1\text{–}2\tau_r$ — both conditions must be met.
