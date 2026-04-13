@@ -1,4 +1,4 @@
-# Chapter 1 — The Importance of Interconnect Design
+# The Importance of Interconnect Design
 
 > Source: `chap1_HSDSD.pdf`  
 > Instructor: Chun-Long Wang, National Taiwan University of Science and Technology

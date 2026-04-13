@@ -4,11 +4,7 @@ subtitle: Chapters 1–5
 date: 2026-04-13
 ---
 
-# HSDSD Midterm Study Notes
-
----
-
-# Chapter 1 — Why Interconnect Design Matters
+# Why Interconnect Design Matters
 
 ## What is an Interconnect?
 
@@ -48,7 +44,7 @@ Moore's Law predicts performance doubles every 18 months. As the processor core 
 
 ---
 
-# Chapter 2 — Ideal Transmission Line Fundamentals
+# Ideal Transmission Line Fundamentals
 
 ## Microstrip vs. Stripline
 
@@ -165,7 +161,7 @@ A visual tool tracking wave amplitude vs. time. Each step = one TD. After each b
 
 ---
 
-# Chapter 3 — Crosstalk
+# Crosstalk
 
 ## Physical Mechanism
 
@@ -252,7 +248,7 @@ Use SLEM early in design; full coupled simulation for final verification.
 
 ---
 
-# Chapter 4 — Coupled Microstrip and FEXT Suppression
+# Coupled Microstrip and FEXT Suppression
 
 ## Why FEXT Exists in Microstrips (but not Striplines)
 
@@ -282,7 +278,7 @@ Add $C_f$ at the near end of the quiet line to **increase** $\text{TD}_{\text{od
 
 ---
 
-# Chapter 5 — Non-ideal Interconnect Issues
+# Non-ideal Interconnect Issues
 
 ## Types of Transmission Line Losses
 
@@ -359,15 +355,15 @@ When unsettled reflections, crosstalk, or ringing **corrupts the next bit**. Mos
 
 Efficiently simulate with three periodic patterns: `010101...`, `001100...`, `000111...`.
 
-## 90° Bends
+## 90$^\circ$ Bends
 
-A 90° corner adds excess capacitance:
+A 90$^\circ$ corner adds excess capacitance:
 
-$$C_{90°} \approx C_{11} \cdot w$$
+$$C_{90^\circ} \approx C_{11} \cdot w$$
 
 *(chap5.pdf, p.39)*
 
-Mitigation: chamfer (45° cut) or use 45° bends. Rounding works best but may conflict with layout tools.
+Mitigation: chamfer (45$^\circ$ cut) or use 45$^\circ$ bends. Rounding works best but may conflict with layout tools.
 
 ## Topology Effects
 

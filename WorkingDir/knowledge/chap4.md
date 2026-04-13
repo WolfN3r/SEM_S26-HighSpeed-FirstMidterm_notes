@@ -1,4 +1,4 @@
-# Chapter 4 — Coupled Microstrip Line
+# Coupled Microstrip Line
 
 > Source: `chap4_HSDSD.pdf`  
 > Instructor: Chun-Long Wang, National Taiwan University of Science and Technology

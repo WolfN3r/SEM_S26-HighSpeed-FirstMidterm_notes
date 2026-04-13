@@ -2,8 +2,6 @@
 title: HSDSD Exam Prep — Key Formulas and Worked Examples
 ---
 
-# Exam Prep: Key Formulas and Worked Examples
-
 ---
 
 ## Part 1 — Key Formula Sheet
@@ -50,7 +48,7 @@ title: HSDSD Exam Prep — Key Formulas and Worked Examples
 | $R_{\text{ac}} = R_S\sqrt{F}$ | AC resistance via surface resistance | chap5.pdf p.15 |
 | $\tan\delta_d = \varepsilon''/\varepsilon'$ | Dielectric loss tangent | chap5.pdf p.21 |
 | $G = \tan\delta_d \cdot 2\pi F C_{11}$ | Dielectric shunt conductance | chap5.pdf p.21 |
-| $C_{90°} \approx C_{11}\cdot w$ | Excess capacitance at 90° bend | chap5.pdf p.39 |
+| $C_{90^\circ} \approx C_{11}\cdot w$ | Excess capacitance at 90$^\circ$ bend | chap5.pdf p.39 |
 
 ---
 

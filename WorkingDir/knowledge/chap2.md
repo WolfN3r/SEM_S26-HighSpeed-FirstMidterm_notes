@@ -1,4 +1,4 @@
-# Chapter 2 — Ideal Transmission Line Fundamentals
+# Ideal Transmission Line Fundamentals
 
 > Source: `chap2_HSDSD.pdf`  
 > Instructor: Chun-Long Wang, National Taiwan University of Science and Technology

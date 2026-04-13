@@ -200,7 +200,7 @@ A microstrip has $W = 5$ mil = $127\,\mu$m, $H = 3.2$ mil = $81.3\,\mu$m. Estima
 A microstrip has $C_{11} = 3.2$ pF/in. and the FR4 substrate has $\tan\delta = 0.02$. Calculate the shunt conductance $G$ per unit length at 1 GHz.
 
 **Q5.10** *(chap5.pdf, p.39)*  
-A microstrip trace with $C_{11} = 3.5$ pF/in. and $w = 5$ mil makes a 90° bend. Estimate the excess capacitance.
+A microstrip trace with $C_{11} = 3.5$ pF/in. and $w = 5$ mil makes a 90$^\circ$ bend. Estimate the excess capacitance.
 
 ### True/False
 
@@ -211,7 +211,7 @@ True or False: Skin depth increases with frequency.
 True or False: Clock traces are generally acceptable to serpentine because the effect is the same on all edges.
 
 **Q5.13** *(chap5.pdf, p.40)*  
-True or False: Chamfering a 90° bend at 45° eliminates excess capacitance.
+True or False: Chamfering a 90$^\circ$ bend at 45$^\circ$ eliminates excess capacitance.
 
 ---
 
@@ -303,11 +303,11 @@ $= \sqrt{0.068}\times(7874+2049) = 0.261\times9923 \approx 2590\,\Omega/\text{m}
 **A5.9:** Convert $C_{11}$: $3.2\text{ pF/in.}\times39.37\text{ in./m} = 126\text{ pF/m}$.  
 $G = 0.02\times2\pi\times10^9\times126\times10^{-12} = 0.02\times0.792 = 0.01584\text{ S/m} \approx 15.8\text{ mS/m}$
 
-**A5.10:** $C_{90°} \approx C_{11}\times w = 3.5\text{ pF/in.}\times5\text{ mil} = 3.5\times(5/1000)\text{ pF} = 0.0175\text{ pF} \approx 17.5\text{ fF}$  
+**A5.10:** $C_{90^\circ} \approx C_{11}\times w = 3.5\text{ pF/in.}\times5\text{ mil} = 3.5\times(5/1000)\text{ pF} = 0.0175\text{ pF} \approx 17.5\text{ fF}$  
 *(Note: units must be consistent — $w$ in inches if $C_{11}$ is in pF/in.)*
 
 **A5.11:** **False.** Skin depth **decreases** with increasing frequency. *(chap5.pdf, p.6)*
 
 **A5.12:** **False.** Clock traces must **never** be serpentined because early signal arrival corrupts clock timing. *(chap5.pdf, p.33)*
 
-**A5.13:** **False.** Chamfering **reduces** excess capacitance but does not eliminate it completely. Rounding is more effective, and 45° bends avoid the issue altogether. *(chap5.pdf, p.40)*
+**A5.13:** **False.** Chamfering **reduces** excess capacitance but does not eliminate it completely. Rounding is more effective, and 45$^\circ$ bends avoid the issue altogether. *(chap5.pdf, p.40)*

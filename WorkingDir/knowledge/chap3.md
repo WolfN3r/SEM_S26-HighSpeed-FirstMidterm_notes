@@ -1,4 +1,4 @@
-# Chapter 3 — Crosstalk
+# Crosstalk
 
 > Source: `chap3_HSDSD.pdf`  
 > Instructor: Chun-Long Wang, National Taiwan University of Science and Technology

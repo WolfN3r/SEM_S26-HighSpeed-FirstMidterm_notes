@@ -1,5 +1,3 @@
-# Equation Corrections and Verification Log
-
 > Verification pass: each PDF page re-examined against extracted knowledge files.
 
 ---
@@ -87,7 +85,7 @@ This has been corrected in `knowledge/chap5.md`.
 - R_ground formula with W/H term ✓ (slide 12)
 - tan|δ_d| = 1/(2ρπFε) = ε''/ε' ✓ (slide 21)
 - G = (ε''/ε') × 2πF × C_11 ✓ (slide 21)
-- C_90°bend ≈ C_11 × w ✓ (slide 39)
+- $C_{90^\circ\text{bend}}$ ≈ C_11 × w ✓ (slide 39)
 - Fourier square wave expansion ✓ (slide 17)
 
 ---

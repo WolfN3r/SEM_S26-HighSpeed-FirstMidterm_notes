@@ -1,4 +1,4 @@
-# Chapter 5 — Non-ideal Interconnect Issues
+# Non-ideal Interconnect Issues
 
 > Source: `chap5_HSDSD.pdf`  
 > Instructor: Chun-Long Wang, National Taiwan University of Science and Technology
@@ -244,13 +244,13 @@ This captures most ISI effects in much less time than PRBS.
 
 ---
 
-## 5.8 Effects of 90° Bends *(pp.39–41)*
+## 5.8 Effects of 90$^\circ$ Bends *(pp.39–41)*
 
 ### Capacitive Effect *(p.39)*
 
-A 90° bend introduces **excess capacitance** due to the corner area:
+A 90$^\circ$ bend introduces **excess capacitance** due to the corner area:
 
-$$C_{90°\text{ bend}} \approx C_{11} \cdot w$$
+$$C_{90^\circ\text{ bend}} \approx C_{11} \cdot w$$
 
 *(chap5.pdf, p.39)*
 
@@ -259,12 +259,12 @@ where $C_{11}$ = self-capacitance per unit length, $w$ = trace width. The excess
 ### Mitigation *(p.40)*
 
 1. **Rounding** the corner — eliminates the effect (but problematic for some layout tools)
-2. **Chamfering** — 45° diagonal cut at the corner
-3. **Using 45° bends** instead of 90° bends altogether
+2. **Chamfering** — 45$^\circ$ diagonal cut at the corner
+3. **Using 45$^\circ$ bends** instead of 90$^\circ$ bends altogether
 
 ### High-Frequency Current Paths *(p.41)*
 
-At high frequencies, some current component **hugs the inner corner** of a 90° bend → signals arrive slightly early at the destination.
+At high frequencies, some current component **hugs the inner corner** of a 90$^\circ$ bend → signals arrive slightly early at the destination.
 
 ---
 

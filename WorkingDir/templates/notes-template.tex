@@ -15,7 +15,7 @@
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
+\usepackage[nobottomtitles*]{titlesec}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{calc}
@@ -24,6 +24,14 @@
 \titlespacing*{\section}{0pt}{1.5ex plus 0.5ex}{0.8ex plus 0.2ex}
 \titlespacing*{\subsection}{0pt}{1.2ex plus 0.4ex}{0.5ex plus 0.1ex}
 \titlespacing*{\subsubsection}{0pt}{1.0ex plus 0.3ex}{0.3ex plus 0.1ex}
+
+% Prevent inline math from breaking at operators across line boundaries
+\relpenalty=9999
+\binoppenalty=9999
+
+% Prevent widow/orphan lines
+\widowpenalty=10000
+\clubpenalty=10000
 
 % Wider right margin for reader annotations
 % (set in geometry above: rmargin=1.2in)
