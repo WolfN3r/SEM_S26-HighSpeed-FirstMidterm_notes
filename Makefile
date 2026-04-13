@@ -3,7 +3,7 @@
 # =============================================================================
 
 CLAUDE_IMAGE      := claude-code-env
-CLAUDE_CONTAINER  := claude-code-emc
+CLAUDE_CONTAINER  := claude-code-highspeed
 WORKSPACE         := $(shell pwd)
 
 # Load .env if exists
@@ -24,7 +24,13 @@ endif
 check-security:
 	@echo "==> Security pre-flight checks..."
 	@test ! -f .env || (grep -q "sk-ant-PASTE" .env && echo "  ✗ .env still has placeholder key — edit it!" && exit 1 || echo "  ✓ .env has a real key")
-	@grep -rq "ANTHROPIC_API_KEY" .git/ 2>/dev/null && echo "  ✗ WARNING: API key found in git history!" || echo "  ✓ No API key in git history"
+	@if echo "$$ANTHROPIC_API_KEY" | grep -q "sk-ant-PASTE"; then \
+		echo "  - Skipping git history check (placeholder key)"; \
+	elif grep -rq "$$ANTHROPIC_API_KEY" .git/ 2>/dev/null; then \
+		echo "  ✗ WARNING: API key found in git history!"; exit 1; \
+	else \
+		echo "  ✓ No API key in git history"; \
+	fi
 	@echo "  ✓ Security checks passed"
 
 # ============================
@@ -82,7 +88,7 @@ claude-attach: ## Open an additional Claude session inside the already-running c
 	docker exec -it $(CLAUDE_CONTAINER) bash -c "cd /workspace && claude --dangerously-skip-permissions"
 
 .PHONY: cc
-cc: check-api-key ## Smart open: starts Claude if not running, attaches if already running
+cc: check-api-key check-security ## Smart open: starts Claude if not running, attaches if already running
 	@if docker ps -q -f name=$(CLAUDE_CONTAINER) | grep -q .; then \
 		echo "==> Container running — opening new session..."; \
 		docker exec -it $(CLAUDE_CONTAINER) \
